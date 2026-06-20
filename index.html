@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0c12" />
+<title>The Parlour — A Private Concierge</title>
+<meta name="robots" content="noindex" />
+<script>document.documentElement.className = "js";</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0c12;
+    --bg-2: #121726;
+    --panel: #0f1420;
+    --gold: #c9a24b;
+    --gold-2: #e7c977;
+    --gold-soft: #a98c44;
+    --cream: #f3ecda;
+    --text: #e9e3d4;
+    --muted: #9a9483;
+    --red: #b5402f;
+    --blue: #3d6ea5;
+    --line: rgba(201, 162, 75, 0.32);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background:
+      radial-gradient(120% 90% at 50% -10%, #1a2236 0%, rgba(26,34,54,0) 60%),
+      var(--bg);
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "EB Garamond", Georgia, serif;
+    font-size: 18px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100svh;
+  }
+
+  /* vignette + faint felt */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 100% at 50% 0%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%);
+    z-index: 0;
+  }
+
+  .eyebrow {
+    font-family: "Inter", system-ui, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.26em;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+
+  .display {
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+  }
+
+  .gold-text {
+    background: linear-gradient(180deg, var(--gold-2), var(--gold) 55%, var(--gold-soft));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ============ COVER ============ */
+  .cover {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    padding: 28px 22px calc(28px + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+
+  .scene { perspective: 1400px; width: 100%; display: flex; justify-content: center; }
+
+  .flip-card {
+    position: relative;
+    width: min(78vw, 330px);
+    aspect-ratio: 0.715;
+    transform-style: preserve-3d;
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+    cursor: pointer;
+    animation: float 6s ease-in-out infinite;
+  }
+  .flip-card.flipped { transform: rotateY(180deg); animation: none; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-0.6deg); }
+    50% { transform: translateY(-9px) rotate(0.6deg); }
+  }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    border: 1px solid var(--gold);
+    background:
+      linear-gradient(160deg, #161d2e 0%, #0c111c 60%, #0a0e18 100%);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 30px 60px -28px rgba(0,0,0,0.9),
+      0 0 0 6px rgba(10,12,18,0.6);
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    overflow: hidden;
+  }
+  .face::after {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+  .face-back { transform: rotateY(180deg); }
+
+  /* corner pips like a playing card */
+  .pip-corner {
+    position: absolute;
+    font-size: 18px;
+    color: var(--gold);
+    opacity: 0.85;
+    line-height: 1;
+  }
+  .pip-corner.tl { top: 14px; left: 16px; }
+  .pip-corner.br { bottom: 14px; right: 16px; transform: rotate(180deg); }
+
+  .emblem {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: var(--gold);
+    box-shadow: 0 0 0 5px rgba(201,162,75,0.08);
+  }
+
+  .card-kicker {
+    font-family: "Inter", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 9.5px;
+    color: var(--muted);
+  }
+
+  .card-line {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 19px;
+    line-height: 1.35;
+    color: var(--cream);
+  }
+
+  .card-for { font-size: 15px; color: var(--muted); }
+  .card-for b { color: var(--gold-2); font-weight: 500; font-style: italic; }
+
+  .tap-hint {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: "Inter", sans-serif;
+    text-transform: uppercase; letter-spacing: 0.2em; font-size: 10px;
+    color: var(--gold);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  .tap-hint .chev { font-size: 13px; }
+  @keyframes pulse { 0%,100% { opacity: 0.45; } 50% { opacity: 1; } }
+
+  /* back face (reveal) */
+  .reveal-label { letter-spacing: 0.3em; }
+  .reveal-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 900;
+    font-size: clamp(34px, 12vw, 50px);
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+  .reveal-tag { font-style: italic; color: var(--cream); font-size: 16px; line-height: 1.4; }
+  .reveal-suits { color: var(--gold); letter-spacing: 0.4em; font-size: 16px; }
+
+  .to-dossier {
+    margin-top: 4px;
+    background: none; border: 0; cursor: pointer;
+    font-family: "Inter", sans-serif; text-transform: uppercase;
+    letter-spacing: 0.2em; font-size: 10px; color: var(--gold);
+    display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .to-dossier .down { font-size: 15px; animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+  .cover-foot {
+    font-family: "Inter", sans-serif; text-transform: uppercase;
+    letter-spacing: 0.24em; font-size: 9.5px; color: var(--muted);
+  }
+
+  /* ============ DOSSIER ============ */
+  .dossier {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 18px 24px calc(70px + env(safe-area-inset-bottom));
+  }
+  .js .dossier[hidden] { display: none; }
+  .dossier.reveal-in { animation: rise 0.8s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  .rule {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    color: var(--gold); margin: 40px 0;
+  }
+  .rule::before, .rule::after {
+    content: ""; height: 1px; flex: 1;
+    background: linear-gradient(90deg, transparent, var(--line), transparent);
+  }
+  .rule .suits { letter-spacing: 0.3em; font-size: 13px; opacity: 0.9; }
+
+  section.block { margin-top: 6px; }
+  .block h2 {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: clamp(25px, 7vw, 31px);
+    line-height: 1.15;
+    margin: 8px 0 12px;
+    color: var(--cream);
+  }
+  .block p { margin: 0 0 16px; }
+  .lead { font-size: 19px; }
+
+  .ph {
+    color: var(--gold-2);
+    font-style: italic;
+    border-bottom: 1px dashed rgba(201,162,75,0.5);
+    padding-bottom: 1px;
+  }
+
+  /* service itinerary */
+  .services { list-style: none; padding: 0; margin: 10px 0 0; }
+  .services li {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+    padding: 18px 0;
+    border-top: 1px solid rgba(201,162,75,0.18);
+  }
+  .services li:first-child { border-top: 0; }
+  .svc-num {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-size: 26px;
+    color: var(--gold);
+    line-height: 1;
+    text-align: center;
+  }
+  .svc-body h3 {
+    margin: 2px 0 4px;
+    font-family: "Inter", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 12px;
+    color: var(--gold-2);
+    font-weight: 600;
+  }
+  .svc-body p { margin: 0; font-size: 16.5px; color: var(--text); }
+
+  /* sign off */
+  .signoff {
+    margin-top: 34px;
+    text-align: center;
+  }
+  .signoff .sig {
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--cream);
+  }
+  .signoff .from { color: var(--gold-2); }
+  .stamp {
+    margin: 26px auto 0;
+    width: 116px; height: 116px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px;
+    transform: rotate(-8deg);
+    box-shadow: 0 0 0 5px rgba(201,162,75,0.07);
+  }
+  .stamp .s-top, .stamp .s-bot {
+    font-family: "Inter", sans-serif; text-transform: uppercase;
+    letter-spacing: 0.16em; font-size: 8px; color: var(--gold-soft);
+  }
+  .stamp .s-mid { font-size: 26px; }
+
+  footer.fine {
+    margin-top: 46px;
+    text-align: center;
+    font-family: "Inter", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 9px;
+    color: var(--muted);
+  }
+
+  @media (min-width: 680px) {
+    body { font-size: 19px; }
+    .flip-card { width: 340px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flip-card, .tap-hint, .to-dossier .down, .stamp { animation: none !important; }
+    .flip-card { transition: transform 0.35s ease; }
+    .dossier.reveal-in { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ COVER ============ -->
+  <main class="cover" id="cover">
+    <div class="eyebrow">The Parlour &middot; A Private Games Concierge</div>
+
+    <div class="scene">
+      <div class="flip-card" id="flipCard" tabindex="0" role="button"
+           aria-label="Open your dossier">
+        <!-- FRONT -->
+        <div class="face face-front">
+          <span class="pip-corner tl">&spades;</span>
+          <span class="pip-corner br">&spades;</span>
+          <div class="card-kicker">By Appointment Only</div>
+          <div class="emblem">&spades;</div>
+          <div class="card-line">An acquisition has been<br />arranged in your honour.</div>
+          <div class="card-for">For the attention of <b><span class="ph">[ his name ]</span></b></div>
+          <div class="tap-hint"><span class="chev">&#9656;</span> Tap to open your dossier</div>
+        </div>
+        <!-- BACK / REVEAL -->
+        <div class="face face-back">
+          <span class="pip-corner tl">&hearts;</span>
+          <span class="pip-corner br">&hearts;</span>
+          <div class="eyebrow reveal-label">Your selection</div>
+          <div class="reveal-title gold-text">BALATRO</div>
+          <div class="reveal-tag">The little card game<br />that eats evenings whole.</div>
+          <div class="reveal-suits">&spades; &hearts; &diams; &clubs;</div>
+          <button class="to-dossier" id="toDossier">
+            Read your dossier
+            <span class="down">&#9662;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-foot">Established this Father&rsquo;s Day &middot; Members Only</div>
+  </main>
+
+  <!-- ============ DOSSIER ============ -->
+  <article class="dossier" id="dossier" hidden>
+
+    <div class="rule"><span class="suits">&spades; &hearts; &diams; &clubs;</span></div>
+
+    <section class="block">
+      <div class="eyebrow">The Brief</div>
+      <h2>You&rsquo;ve been gifted <span class="gold-text">Balatro</span>.</h2>
+      <p class="lead">A poker-flavoured card game so quietly addictive it really ought to
+        come with a warning. You build a humble poker hand &mdash; then bend the rules with
+        wild &ldquo;Joker&rdquo; cards until a measly pair of 2s somehow scores a million points.</p>
+      <p>No internet rivals, no pressure, no clock. Just you, a deck, and the gentle ruin
+        of &ldquo;one more run.&rdquo; It has stolen more evenings than we can legally disclose.</p>
+    </section>
+
+    <div class="rule"><span class="suits">&spades;</span></div>
+
+    <section class="block">
+      <div class="eyebrow">Why this one, for you</div>
+      <h2>A hand picked with intent.</h2>
+      <p><span class="ph">[ A personal line about why Balatro suits him &mdash; e.g. &ldquo;For the
+        man who taught me to play cards,&rdquo; or &ldquo;You&rsquo;ve never met a game you
+        didn&rsquo;t try to outsmart.&rdquo; We&rsquo;ll personalise this together. ]</span></p>
+    </section>
+
+    <div class="rule"><span class="suits">&spades; &hearts; &diams; &clubs;</span></div>
+
+    <section class="block">
+      <div class="eyebrow">Your concierge service</div>
+      <h2>Delivered with white gloves.</h2>
+      <p>A small matter: the game lives in a digital shop. That&rsquo;s where your concierge
+        comes in &mdash; you needn&rsquo;t lift a finger.</p>
+      <ol class="services">
+        <li>
+          <div class="svc-num">I</div>
+          <div class="svc-body">
+            <h3>An account, arranged</h3>
+            <p>Balatro is sold in a shop called <b>Steam</b>. We&rsquo;ll set you up with an
+              account &mdash; it&rsquo;s free and takes about five minutes.</p>
+          </div>
+        </li>
+        <li>
+          <div class="svc-num">II</div>
+          <div class="svc-body">
+            <h3>The gift, delivered</h3>
+            <p>Balatro is sent straight to your new account &mdash; wrapped, paid, and
+              waiting in your library.</p>
+          </div>
+        </li>
+        <li>
+          <div class="svc-num">III</div>
+          <div class="svc-body">
+            <h3>White-glove setup</h3>
+            <p>Your concierge, <b><span class="ph">[ your name ]</span></b>, handles every
+              fiddly bit in person. You attend only to the cards.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <div class="rule"><span class="suits">&spades;</span></div>
+
+    <section class="block">
+      <div class="eyebrow">The itinerary</div>
+      <h2>What happens next.</h2>
+      <p><span class="ph">[ When &amp; where &mdash; e.g. &ldquo;This Sunday, after dinner.
+        Bring nothing but your competitive streak.&rdquo; ]</span></p>
+    </section>
+
+    <div class="signoff">
+      <div class="rule"><span class="suits">&spades; &hearts; &diams; &clubs;</span></div>
+      <p class="sig">With admiration and zero refunds,<br />
+        your in-house concierge &mdash; <span class="from ph">[ your name ]</span></p>
+      <div class="stamp">
+        <span class="s-top">The Parlour</span>
+        <span class="s-mid">&spades;</span>
+        <span class="s-bot">Happy Father&rsquo;s Day</span>
+      </div>
+    </div>
+
+    <footer class="fine">The Parlour &middot; A Private Games Concierge &middot; Members Only</footer>
+  </article>
+
+<script>
+  (function () {
+    var card = document.getElementById("flipCard");
+    var dossier = document.getElementById("dossier");
+    var toDossier = document.getElementById("toDossier");
+    var opened = false;
+
+    function open() {
+      if (opened) return;
+      opened = true;
+      card.classList.add("flipped");
+      card.setAttribute("aria-label", "Your gift: Balatro. Continue to your dossier below.");
+      dossier.hidden = false;
+      // allow layout, then animate in
+      requestAnimationFrame(function () {
+        dossier.classList.add("reveal-in");
+      });
+    }
+
+    function scrollToDossier(e) {
+      if (e) e.stopPropagation();
+      dossier.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+    });
+    if (toDossier) {
+      toDossier.addEventListener("click", function (e) {
+        scrollToDossier(e);
+      });
+    }
+  })();
+</script>
+</body>
+</html>
