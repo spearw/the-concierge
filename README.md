@@ -11,9 +11,7 @@ white-glove video-game concierge service.
 
 ## Personalize before gifting
 
-Recipient is **Raymond**; tone is deadpan luxury-concierge. One placeholder
-remains (search `index.html` for `class="ph"`, shown with a dashed gold underline):
-
-1. `[ your name ]` — the sign-off ("your concierge in residence, …")
+Recipient is **Raymond**; signed from **William and Katherine**; tone is deadpan
+luxury-concierge. No placeholders remain — the page is gift-ready.
 
 Commit + push to update the live page (Pages redeploys automatically).
