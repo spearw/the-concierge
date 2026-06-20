@@ -11,11 +11,9 @@ white-glove video-game concierge service.
 
 ## Personalize before gifting
 
-Search `index.html` for `class="ph"` (placeholders, shown with a dashed gold underline):
+Recipient is **Raymond**; tone is deadpan luxury-concierge. One placeholder
+remains (search `index.html` for `class="ph"`, shown with a dashed gold underline):
 
-1. `[ his name ]` — on the cover card
-2. `[ A personal line about why Balatro suits him ]` — "Why this one, for you"
-3. `[ your name ]` — in service step III and the sign-off (two spots)
-4. `[ When & where ]` — the itinerary
+1. `[ your name ]` — the sign-off ("your concierge in residence, …")
 
 Commit + push to update the live page (Pages redeploys automatically).
